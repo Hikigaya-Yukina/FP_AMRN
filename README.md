@@ -1,5 +1,5 @@
 # ME5413_Final_Project
-
+ws_livox 要自己下一个放进去不然没法catkin_make
 NUS ME5413 Autonomous Mobile Robotics Final Project
 > Authors: [Christina](https://github.com/ldaowen), [Yuhang](https://github.com/yuhang1008), [Dongen](https://github.com/nuslde), and [Shuo](https://github.com/SS47816)
 
