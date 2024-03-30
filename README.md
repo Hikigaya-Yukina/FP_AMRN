@@ -1,5 +1,6 @@
 # ME5413_Final_Project
 ws_livox 要自己下一个放进去不然没法catkin_make
+目前直接输入 roslaunch me5413_world Point_lio.launch能启动。问题应该是没有对准位姿，结果每一帧都各自保存在各自的位置上？
 NUS ME5413 Autonomous Mobile Robotics Final Project
 > Authors: [Christina](https://github.com/ldaowen), [Yuhang](https://github.com/yuhang1008), [Dongen](https://github.com/nuslde), and [Shuo](https://github.com/SS47816)
 
