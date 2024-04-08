@@ -1,50 +1,20 @@
-# ME5413_Final_Project
-ws_livox 要自己下一个放进去不然没法catkin_make
-目前直接输入 roslaunch me5413_world Point_lio.launch能启动。问题应该是没有对准位姿，结果每一帧都各自保存在各自的位置上？
-NUS ME5413 Autonomous Mobile Robotics Final Project
-> Authors: [Christina](https://github.com/ldaowen), [Yuhang](https://github.com/yuhang1008), [Dongen](https://github.com/nuslde), and [Shuo](https://github.com/SS47816)
+# Autonomous Mobile Robot Mapping & Navigation in Virtual Factory
 
 ![Ubuntu 20.04](https://img.shields.io/badge/OS-Ubuntu_20.04-informational?style=flat&logo=ubuntu&logoColor=white&color=2bbc8a)
 ![ROS Noetic](https://img.shields.io/badge/Tools-ROS_Noetic-informational?style=flat&logo=ROS&logoColor=white&color=2bbc8a)
 ![C++](https://img.shields.io/badge/Code-C++-informational?style=flat&logo=c%2B%2B&logoColor=white&color=2bbc8a)
 ![Python](https://img.shields.io/badge/Code-Python-informational?style=flat&logo=Python&logoColor=white&color=2bbc8a)
-![GitHub Repo stars](https://img.shields.io/github/stars/NUS-Advanced-Robotics-Centre/ME5413_Final_Project?color=FFE333)
-![GitHub Repo forks](https://img.shields.io/github/forks/NUS-Advanced-Robotics-Centre/ME5413_Final_Project?color=FFE333)
 
-![cover_image](src/me5413_world/media/gazebo_world.png)
+This is the final project report for the **ME5413 Autonomous Mobile Robotics course at the National University of Singapore**, completed by Group 6.
 
-## Dependencies
+**Authors:**   chen Guanyu, Wu Zhuojun, Xu Boyang, Hao Yuqi, Miao Chenhui, Zhou Yinhong
 
-* System Requirements:
-  * Ubuntu 20.04 (18.04 not yet tested)
-  * ROS Noetic (Melodic not yet tested)
-  * C++11 and above
-  * CMake: 3.0.2 and above
-* This repo depends on the following standard ROS pkgs:
-  * `roscpp`
-  * `rospy`
-  * `rviz`
-  * `std_msgs`
-  * `nav_msgs`
-  * `geometry_msgs`
-  * `visualization_msgs`
-  * `tf2`
-  * `tf2_ros`
-  * `tf2_geometry_msgs`
-  * `pluginlib`
-  * `map_server`
-  * `gazebo_ros`
-  * `jsk_rviz_plugins`
-  * `jackal_gazebo`
-  * `jackal_navigation`
-  * `velodyne_simulator`
-  * `teleop_twist_keyboard`
-* And this [gazebo_model](https://github.com/osrf/gazebo_models) repositiory
 
-## Installation
+<img src="src/me5413_world/media/gazebo_world.jpg" width="450" alt="virtual_factory"/><img src="report/images/map_info.png" width="350" alt="map_info"/>
+
+<h2 id="1"> Installation</h2>
 
 This repo is a ros workspace, containing three rospkgs:
-
 * `interactive_tools` are customized tools to interact with gazebo and your robot
 * `jackal_description` contains the modified jackal robot model descriptions
 * `me5413_world` the main pkg containing the gazebo world, and the launch files
@@ -64,129 +34,86 @@ rosdep install --from-paths src --ignore-src -r -y
 
 # Build
 catkin_make
-# Source 
+# Source
 source devel/setup.bash
 ```
 
 To properly load the gazebo world, you will need to have the necessary model files in the `~/.gazebo/models/` directory.
 
-There are two sources of models needed:
+<h2 id="1"> 1. Project Decription</h2>
 
-* [Gazebo official models](https://github.com/osrf/gazebo_models)
-  
-  ```bash
-  # Create the destination directory
-  cd
-  mkdir -p .gazebo/models
+In this mini-factory environment:
+* 3 target areas
+* 1 restricted area
 
-  # Clone the official gazebo models repo (assuming home here `~/`)
-  git clone https://github.com/osrf/gazebo_models.git
-
-  # Copy the models into the `~/.gazebo/models` directory
-  cp -r ~/gazebo_models/* ~/.gazebo/models
-  ```
-
-* [Our customized models](https://github.com/NUS-Advanced-Robotics-Centre/ME5413_Final_Project/tree/main/src/me5413_world/models)
-
-  ```bash
-  # Copy the customized models into the `~/.gazebo/models` directory
-  cp -r ~/ME5413_Final_Project/src/me5413_world/models/* ~/.gazebo/models
-  ```
-
-## Usage
-
-### 0. Gazebo World
-
-This command will launch the gazebo with the project world
-
-```bash
-# Launch Gazebo World together with our robot
-roslaunch me5413_world world.launch
-```
-
-### 1. Manual Control
-
-If you wish to explore the gazebo world a bit, we provide you a way to manually control the robot around:
-
-```bash
-# Only launch the robot keyboard teleop control
-roslaunch me5413_world manual.launch
-```
-
-**Note:** This robot keyboard teleop control is also included in all other launch files, so you don't need to launch this when you do mapping or navigation.
-
-![rviz_manual_image](src/me5413_world/media/rviz_manual.png)
-
-### 2. Mapping
-
-After launching **Step 0**, in the second terminal:
-
-```bash
-# Launch GMapping
-roslaunch me5413_world mapping.launch
-```
-
-After finishing mapping, run the following command in the thrid terminal to save the map:
-
-```bash
-# Save the map as `my_map` in the `maps/` folder
-roscd me5413_world/maps/
-rosrun map_server map_saver -f my_map map:=/map
-```
-
-![rviz_nmapping_image](src/me5413_world/media/rviz_mapping.png)
-
-### 3. Navigation
-
-Once completed **Step 2** mapping and saved your map, quit the mapping process.
-
-Then, in the second terminal:
-
-```bash
-# Load a map and launch AMCL localizer
-roslaunch me5413_world navigation.launch
-```
-
-![rviz_navigation_image](src/me5413_world/media/rviz_navigation.png)
-
-## Student Tasks
-
-### 1. Map the environment
-
-* You may use any SLAM algorithm you like, any type:
-  * 2D LiDAR
-  * 3D LiDAR
-  * Vision
-  * Multi-sensor
-* Verify your SLAM accuracy by comparing your odometry with the published `/gazebo/ground_truth/state` topic (`nav_msgs::Odometry`), which contains the gournd truth odometry of the robot.
-* You may want to use tools like [EVO](https://github.com/MichaelGrupp/evo) to quantitatively evaluate the performance of your SLAM algorithm.
-
-### 2. Using your own map, navigate your robot
-
-* From the starting point, move to the given pose within each area in sequence
+The aim of the project is to design a robot navigation software stack that can:
+* From the starting point, move to the given pose within each area in sequence:
   * Assembly Line 1, 2
   * Random Box 1, 2, 3, 4
   * Delivery Vehicle 1, 2, 3
-* We have provided you a GUI in RVIZ that allows you to click and publish these given goal poses to the `/move_base_simple/goal` topic:
-  
-  ![rviz_panel_image](src/me5413_world/media/rviz_panel.png)
 
-* We also provides you four topics (and visualized in RVIZ) that computes the real-time pose error between your robot and the selelcted goal pose:
-  * `/me5413_world/absolute/heading_error` (in degrees, wrt `world` frame, `std_msgs::Float32`)
-  * `/me5413_world/absolute/position_error` (in meters, wrt `world` frame, `std_msgs::Float32`)
-  * `/me5413_world/relative/heading_error` (in degrees, wrt `map` frame, `std_msgs::Float32`)
-  * `/me5413_world/relative/position_error` (in meters wrt `map` frame, `std_msgs::Float32`)
+Task 1 Mapping
 
-## Contribution
+In this task, we manually map the environment using SLAM, choosing Point LIO SLAM for its accuracy and modernity over algorithms like ALOAM and FLOAM. To meet our 2D map requirement, we convert the 3D point cloud map to 2D after the 3D map is generated.
 
-You are welcome contributing to this repo by opening a pull-request
+Task 2 Navigation
 
-We are following:
 
-* [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html),
-* [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#main),
-* [ROS C++ Style Guide](http://wiki.ros.org/CppStyleGuide)
 
-## License
+**Files included:**
+* Report: Group6_FinalProject.pdf
+* PPT: Presentation.pptx
+* Video Recording:
+  * Mapping: one **fastlio.mp4** file available in: [Google Drive Link](https://drive.google.com/file/d/1EEQBYImnJs4QajZ1OG1U6qmV-J9dTWL5/view?usp=drive_link)
+  * Navigation: one **Video_Uncompressed.mp4** file available in: [Google Drive Link](https://drive.google.com/file/d/1lj-83mchuxrjdUUB504Vcz-bM367FJpr/view?usp=share_link)
+* Map file:
+  1) one 2D projection map file **map.pgm**
+  2) one 3D pointcloud mapping file **map_pointcloud.pcd** available in :[Google Drive Link](https://drive.google.com/file/d/19SF8SPli2iWed0avGKpOY63t1eXppWkJ/view?usp=share_link)
 
-The [ME5413_Final_Project](https://github.com/NUS-Advanced-Robotics-Centre/ME5413_Final_Project) is released under the [MIT License](https://github.com/NUS-Advanced-Robotics-Centre/ME5413_Final_Project/blob/main/LICENSE)
+<h2 id="2"> 2. Prerequisites</h2>
+
+### 2.1 **Ubuntu** and **ROS**
+* Ubuntu >= 20.04
+* ROS    >= Melodic. [ROS Installation](http://wiki.ros.org/ROS/Installation)
+
+### 2.2 **PCL && Eigen**
+* PCL    >= 1.8,   Follow [PCL Installation](http://www.pointclouds.org/downloads/linux.html).
+* Eigen  >= 3.3.4, Follow [Eigen Installation](http://eigen.tuxfamily.org/index.php?title=Main_Page).
+
+### 2.3 **livox_ros_driver**
+* Follow [livox_ros_driver Installation](https://github.com/Livox-SDK/livox_ros_driver).
+
+*Remarks:*
+- **livox_ros_driver** must be installed and **sourced** as FAST-LIO must support Livox serials LiDAR firstly.
+- How to source? Add the line `source $Licox_ros_driver_dir$/devel/setup.bash` to the end of file `~/.bashrc`, where `$Licox_ros_driver_dir$` is the directory of the livox ros driver workspace (should be the `ws_livox` directory if you completely followed the livox official document).
+
+### 2.4 robot-pose-ekf
+```
+sudo apt-get install ros-noetic-robot-pose-ekf
+```
+
+### 2.5 navigation global_planner
+```
+sudo apt-get install ros-noetic-navigation
+```
+
+### 2.6 folder to be created
+create a folder named `include` in`src/aster_ws/src/Astar_planner`. And an empty folder named `astar_planner` in it.
+
+### Task 1 Mappin
+
+
+
+### Task 2 Navigation
+
+After completing the mapping, end the mapping process and restart gazebo. To load the navigation stack, execute the following command in a new terminal window.
+```
+source devel/setup.bash
+roslaunch me5413_world world.launch
+
+source devel/setup.bash
+roslaunch me5413_world navigation.launch
+```
+Select the relevant topic under global path, and then press the button on simplePanel to set the desired goal pose.
+
+<img src="report/images/navigation_result.png" width="500" alt="naviagation_result_image"/>
