@@ -54,8 +54,15 @@ The aim of the project is to design a robot navigation software stack that can:
 
 Task 1 Mapping
 
-In this task, we manually map the environment using SLAM, choosing Point LIO SLAM for its accuracy and modernity over algorithms like ALOAM and FLOAM. To meet our 2D map requirement, we convert the 3D point cloud map to 2D after the 3D map is generated.
-
+In this task, we manually map the environment using SLAM.
+* Maps Building: use the SLAM alogrithms to map the environment
+ * SLAM Point LIO: for its accuracy 
+ * SLAM ALOAM & FLOAM: for the modernity 
+* Maps Generating: caputure 3D point cloud maps through SLAM and convert them to 2D maps
+ * 3D point cloud maps saving
+ * Filter the useless points and adjust the orientations of PCDs
+ * Convert 3D maps to 2D maps
+ 
 Task 2 Navigation
 
 
