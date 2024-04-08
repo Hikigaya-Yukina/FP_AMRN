@@ -56,12 +56,12 @@ Task 1 Mapping
 
 In this task, we manually map the environment using SLAM.
 * Maps Building: use the SLAM alogrithms to map the environment
- * SLAM Point LIO: for its accuracy 
- * SLAM ALOAM & FLOAM: for the modernity 
+  * SLAM Point LIO: for its accuracy 
+  * SLAM ALOAM & FLOAM: for the modernity 
 * Maps Generating: caputure 3D point cloud maps through SLAM and convert them to 2D maps
- * 3D point cloud maps saving
- * Filter the useless points and adjust the orientations of PCDs
- * Convert 3D maps to 2D maps
+  * 3D point cloud maps saving
+  * Filter the useless points and adjust the orientations of PCDs
+  * Convert 3D maps to 2D maps
  
 Task 2 Navigation
 
