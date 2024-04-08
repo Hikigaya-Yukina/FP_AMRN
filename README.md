@@ -101,9 +101,52 @@ sudo apt-get install ros-noetic-navigation
 create a folder named `include` in`src/aster_ws/src/Astar_planner`. And an empty folder named `astar_planner` in it.
 
 ### Task 1 Mappin
+After building the whole files, in the folder starting Point_LIO:
+```bash
+# Launch Gazebo World together with our robot
+roslaunch me5413_world world.launch
 
+# In another terminal
+roslaunch me5413_world Point_lio.launch
+```
+Once you mapped the whole world you can find the **PCD** files in ~/src/Point_LIO/PCD.
 
+If you want to use ALOAM to get a 3D map:
+```bash
+# Launch Gazebo World together with our robot
+source devel/setup.bash
+roslaunch me5413_world world.launch
 
+# In another terminal
+source devel/setup.bash
+roslaunch me5413_world aloam.launch
+
+# Get the rosbags of the map (you can start a new terminal to do so)
+# This performance can be done after you maped the whole world but the terminal does not be closed
+rosbag record /laser_cloud_map -O map3
+rosrun pcl_ros bag_to_pcd map3.bag /laser_cloud_map map3.pcd
+```
+
+You may process the useless point in the 3D PCD file and convert the map to a 2D map:
+```bash
+# Use pass through filer and Radius Outlier Removal
+source devel/setup.bash
+roslaunch pcd2pgm run.launch
+
+rosrun map_server map_saver
+
+#If the pcd map's orientations are not good, you can rotate it first (This script also has the function to filter the point)
+source devel/setup.bash
+roslaunch read_pcd read_pcd.launch 
+```
+If you want to use EVO to evaluate the performance:
+```bash
+# Record the datas in the beginning in a new terminal
+rosbag record /gazebo/ground_truth/state /odometry/filtered -O Truth_Odom.bag
+
+# After that:
+evo_ape bag Truth_Odom.bag /gazebo/ground_truth/state /odometry/filtered -r full -va --plot --plot_mode xy
+```
 ### Task 2 Navigation
 
 After completing the mapping, end the mapping process and restart gazebo. To load the navigation stack, execute the following command in a new terminal window.
