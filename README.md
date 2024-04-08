@@ -107,7 +107,7 @@ sudo apt-get install ros-noetic-navigation
 ### 2.6 folder to be created
 create a folder named `include` in`src/aster_ws/src/Astar_planner`. And an empty folder named `astar_planner` in it.
 
-### Task 1 Mappin
+### Task 1 Mapping
 After building the whole files, in the folder starting Point_LIO:
 ```bash
 # Launch Gazebo World together with our robot
@@ -137,12 +137,14 @@ rosrun pcl_ros bag_to_pcd map3.bag /laser_cloud_map map3.pcd
 You may process the useless point in the 3D PCD file and convert the map to a 2D map:
 ```bash
 # Use pass through filer and Radius Outlier Removal
+# Put the PCD maps in the home directory
 source devel/setup.bash
 roslaunch pcd2pgm run.launch
 
 rosrun map_server map_saver
 
 #If the pcd map's orientations are not good, you can rotate it first (This script also has the function to filter the point)
+# Put the PCD maps in the home directory
 source devel/setup.bash
 roslaunch read_pcd read_pcd.launch 
 ```
